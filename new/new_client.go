@@ -35,7 +35,7 @@ func (a *ApprovedType) New() {
 
 	url := fmt.Sprintf(baseUrl, year, month, "%20", year, month, day)
 
-	a = &ApprovedType{
+	Approved = &ApprovedType{
 		CurrDate: currDateStr,
 		BaseUrl: url,
 	}

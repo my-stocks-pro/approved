@@ -4,10 +4,11 @@ import (
 	"net/http"
 	"fmt"
 	"io/ioutil"
-	"github.com/my-stocks-pro/approved/new"
+	. "github.com/my-stocks-pro/approved/new"
 )
 
-func (a *new.ApprovedType) NewRequest(url string, needCookie bool, needHeader bool) []byte {
+
+func (a *ApprovedType) NewRequest(url string, needCookie bool, needHeader bool) []byte {
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
