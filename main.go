@@ -31,48 +31,39 @@ func checkLen(tmp string) string {
 }
 
 
-func baseRequest(curr_date time.Time) {
-	page := 1
-	for {
-		p := strconv.Itoa(page)
-		year := strconv.Itoa(curr_date.Year())
-		month := checkLen(fmt.Sprintf("%d", curr_date.Month()))
-		day := checkLen(strconv.Itoa(curr_date.Day()))
+func baseRequest(page string, curr_date time.Time) TestType {
+	year := strconv.Itoa(curr_date.Year())
+	month := checkLen(fmt.Sprintf("%d", curr_date.Month()))
+	day := checkLen(strconv.Itoa(curr_date.Day()))
 
-		url := fmt.Sprintf(baseUrl, year, month, "%20", year, month, day, p)
-		fmt.Println(url)
+	url := fmt.Sprintf(baseUrl, year, month, "%20", year, month, day, page)
 
-		req, err := http.NewRequest("GET", url, nil)
-		if err != nil {
-			fmt.Println(err)
-		}
-
-		cookie := http.Cookie{Name: "session", Value: "s%3AFLsDQ0KkRmbbHJSFijJz_5VxQPCQI7Ol.t5LQWhFeOPA9qV2S0fqa6JBsFB0Rq%2BrxMDPc1URXyHE"}
-		req.AddCookie(&cookie)
-		client := http.Client{}
-		resp, errResp := client.Do(req)
-		if errResp != nil {
-			fmt.Println(errResp)
-		}
-
-		body, errReadBody := ioutil.ReadAll(resp.Body)
-		if errReadBody != nil {
-			fmt.Println(errReadBody)
-		}
-
-		fmt.Println(string(body))
-
-		tmp := TestType{}
-
-		errUnm := json.Unmarshal(body, &tmp)
-		if errUnm != nil {
-			fmt.Println(errUnm)
-		}
-
-		fmt.Println(tmp.Data)
-
-		page += 1
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		fmt.Println(err)
 	}
+
+	cookie := http.Cookie{Name: "session", Value: "s%3AFLsDQ0KkRmbbHJSFijJz_5VxQPCQI7Ol.t5LQWhFeOPA9qV2S0fqa6JBsFB0Rq%2BrxMDPc1URXyHE"}
+	req.AddCookie(&cookie)
+	client := http.Client{}
+	resp, errResp := client.Do(req)
+	if errResp != nil {
+		fmt.Println(errResp)
+	}
+
+	body, errReadBody := ioutil.ReadAll(resp.Body)
+	if errReadBody != nil {
+		fmt.Println(errReadBody)
+	}
+
+	tmp := TestType{}
+
+	errUnm := json.Unmarshal(body, &tmp)
+	if errUnm != nil {
+		fmt.Println(errUnm)
+	}
+
+	return tmp
 }
 
 func (a *ApprovedType) New() {
@@ -82,23 +73,55 @@ func (a *ApprovedType) New() {
 	}
 }
 
+func contains(slice []string, item string) bool {
+	set := make(map[string]struct{}, len(slice))
+	for _, s := range slice {
+		set[s] = struct{}{}
+	}
+
+	_, ok := set[item]
+	return ok
+}
+
+func FullRequest(approved TestType, dataFromRedis []string) {
+	newIDs := []string{}
+
+	for _, image := range approved.Data {
+		if contains(newIDs, image.Media_id) == false {
+			newIDs = append(newIDs, image.Media_id)
+		}
+	}
+
+	Req(newIDs)
+
+}
+
 
 func main() {
 
 	//TODO get data from Redis (api call to server)
 	// res, err := http.Req("")
 
-	curr_date := time.Now()
+	dataFromRedis := []string{"111", "222", "333"}
 
-	baseRequest(curr_date)
+	curr_date := time.Now()
 
 	//Approved.New()
 
+	page := 1
+	for {
+		p := strconv.Itoa(page)
 
+		res := baseRequest(p, curr_date)
+		if len(res.Data) == 0 {
+			break
+		}
+		page += 1
+		fmt.Println(res.Data)
 
-	//req, err := http.NewRequest("GET", )
+		FullRequest(res, dataFromRedis)
 
-
+	}
 
 
 	fmt.Println()
