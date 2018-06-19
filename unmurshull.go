@@ -1,10 +1,6 @@
 package main
 
-type ApprovedType struct {
-	BaseUrl      string
-	Token        string
-	BaseResponse BaseResponseType
-}
+
 
 type BaseResponseType struct {
 	ResponseHeader struct {

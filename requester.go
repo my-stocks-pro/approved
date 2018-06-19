@@ -4,25 +4,15 @@ import (
 	"net/http"
 	"fmt"
 	"io/ioutil"
-	"github.com/dyninc/qstring"
 	"encoding/json"
 )
 
-type Query struct {
-	ID   []string
-	View string
-}
+
+
+
 
 func Req(newIDs []string) {
 
-	query := &Query{
-		ID: newIDs,
-		View: "full",
-	}
-	q, errQ := qstring.MarshalString(query)
-	if errQ != nil {
-		fmt.Println(errQ)
-	}
 
 	url := "https://api.shutterstock.com/v2/images?" + q
 
