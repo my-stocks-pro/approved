@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"github.com/dyninc/qstring"
+	"encoding/json"
 )
 
 type Query struct {
@@ -13,7 +14,6 @@ type Query struct {
 }
 
 func Req(newIDs []string) {
-
 
 	query := &Query{
 		ID: newIDs,
@@ -46,11 +46,12 @@ func Req(newIDs []string) {
 
 	fmt.Println(string(body))
 
-	//tmp := TestType{}
+	tmp := ImageType{}
 
-	//errUnm := json.Unmarshal(body, &tmp)
-	//if errUnm != nil {
-	//	fmt.Println(errUnm)
-	//}
+	errUnm := json.Unmarshal(body, &tmp)
+	if errUnm != nil {
+		fmt.Println(errUnm)
+	}
+	fmt.Println(tmp)
 
 }
