@@ -7,6 +7,8 @@ import (
 	"io/ioutil"
 	"strconv"
 	"encoding/json"
+	"github.com/my-stocks-pro/approved/redis"
+	"github.com/my-stocks-pro/approved/env"
 )
 
 const (
@@ -19,16 +21,6 @@ const (
 )
 
 var Approved *ApprovedType
-
-func checkLen(tmp string) string {
-	var res string
-	if len(tmp) == 1 {
-		res = "0" + tmp
-	} else {
-		res = tmp
-	}
-	return res
-}
 
 
 func baseRequest(page string, curr_date time.Time) TestType {
@@ -45,6 +37,7 @@ func baseRequest(page string, curr_date time.Time) TestType {
 
 	cookie := http.Cookie{Name: "session", Value: "s%3AFLsDQ0KkRmbbHJSFijJz_5VxQPCQI7Ol.t5LQWhFeOPA9qV2S0fqa6JBsFB0Rq%2BrxMDPc1URXyHE"}
 	req.AddCookie(&cookie)
+
 	client := http.Client{}
 	resp, errResp := client.Do(req)
 	if errResp != nil {
@@ -99,12 +92,17 @@ func FullRequest(approved TestType, dataFromRedis []string) {
 
 func main() {
 
+	env.Load()
+
+	currDate := time.Now()
+	currDateStr := currDate.Format("2006-01-02")
+	fmt.Println(currDateStr)
+
 	//TODO get data from Redis (api call to server)
-	// res, err := http.Req("")
+	redis.GET(currDateStr)
 
 	dataFromRedis := []string{"111", "222", "333"}
-
-	curr_date := time.Now()
+	fmt.Println(env.ENV)
 
 	//Approved.New()
 
@@ -112,7 +110,7 @@ func main() {
 	for {
 		p := strconv.Itoa(page)
 
-		res := baseRequest(p, curr_date)
+		res := baseRequest(p, currDate)
 		if len(res.Data) == 0 {
 			break
 		}
