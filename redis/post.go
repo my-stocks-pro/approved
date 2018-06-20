@@ -1,7 +1,7 @@
 package redis
 
+import "github.com/my-stocks-pro/approved/client"
 
-
-func POST() {
+func Post(data client.DataImageType) {
 
 }

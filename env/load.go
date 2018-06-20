@@ -5,19 +5,21 @@ import (
 	"strings"
 )
 
-var ENV int
+var FLAG int
 
 const (
 	FIRSTRUN = 1
+	COOKIE = 2
+	HEADER = 4
 )
 
 func Load() {
-	ENV = 0
+	FLAG = 0
 
 	for _, e := range os.Environ() {
 		pair := strings.Split(e, "=")
 		if pair[0] == "FIRSTRUN" && pair[1] == "1" {
-			ENV |= FIRSTRUN
+			FLAG |= FIRSTRUN
 		}
 	}
 }

@@ -1,7 +1,0 @@
-package run
-
-func First() {
-
-
-
-}
