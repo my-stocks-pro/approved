@@ -8,7 +8,6 @@ import (
 )
 
 func (a *ApprovedType) NormalRUN () {
-
 	page := 1
 	for {
 		p := strconv.Itoa(page)
@@ -29,12 +28,15 @@ func (a *ApprovedType) NormalRUN () {
 		}
 
 		if len(baseResp.Data) == 0 {
+			close(a.ChanResp)
+			close(a.ChanRedis)
 			break
 		}
 		page += 1
 
 		a.ChanResp <- baseResp
+		a.ChanRedis <- baseResp
 	}
 
-	close(a.ChanResp)
+	a.RespDone <- true
 }

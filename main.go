@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/my-stocks-pro/approved/env"
 	"github.com/my-stocks-pro/approved/client"
 
@@ -12,8 +11,6 @@ func main() {
 
 	env.Load()
 
-	fmt.Println(env.FLAG)
-
 	Approved := client.NewClient()
 
 	if (env.FLAG & env.FIRSTRUN) != 0 {
@@ -21,4 +18,10 @@ func main() {
 	} else {
 		Approved.NormalRUN()
 	}
+
+	<-Approved.RespDone
+	<-Approved.RedisDone
+
+	//<- Approved.PSQLDone
+	//<- Approved.SlackDone
 }

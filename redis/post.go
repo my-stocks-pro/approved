@@ -1,7 +1,11 @@
 package redis
 
-import "github.com/my-stocks-pro/approved/client"
+import "fmt"
 
-func Post(data client.DataImageType) {
+func Post(data []byte, done chan bool) {
+	fmt.Println(string(data))
 
+
+	done <- true
+	return
 }
