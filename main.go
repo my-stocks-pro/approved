@@ -20,7 +20,9 @@ func main() {
 	}
 
 	<-Approved.RespDone
+	close(Approved.ChanResp)
 	<-Approved.RedisDone
+	close(Approved.RedisDone)
 
 	//<- Approved.PSQLDone
 	//<- Approved.SlackDone

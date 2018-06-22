@@ -79,7 +79,13 @@ func (a *ApprovedType) workerRedis() {
 		panic(e)
 	}
 
-	go redis.Post(d, a.RedisDone)
+	_, err := redis.Post(d)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		a.RedisDone <- true
+		//close(a.RedisDone)
+	}
 }
 
 func (a *ApprovedType) workerSlack() {

@@ -129,7 +129,7 @@ func NewClient() *ApprovedType {
 		a.RedisResp = redis.Get()
 	}
 
-	go a.GreateWorkers()
+	a.GreateWorkers()
 
 	return a
 }

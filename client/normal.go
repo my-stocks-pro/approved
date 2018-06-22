@@ -39,4 +39,5 @@ func (a *ApprovedType) NormalRUN () {
 	}
 
 	a.RespDone <- true
+	//close(a.RespDone)
 }
