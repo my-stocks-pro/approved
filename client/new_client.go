@@ -4,8 +4,6 @@ import (
 	"time"
 	"strconv"
 	"fmt"
-	"github.com/my-stocks-pro/approved/env"
-	"github.com/my-stocks-pro/approved/redis"
 )
 
 const (
@@ -84,6 +82,16 @@ type BaseRespType struct {
 	}
 }
 
+type TypeChanResp struct {
+	Res BaseRespType
+	Done bool
+}
+
+
+type TypeRedis struct {
+	RedisResp []string
+}
+
 type ApprovedType struct {
 	TimeStamp time.Time
 	CurrDate  string
@@ -95,15 +103,8 @@ type ApprovedType struct {
 	NewURL    string
 	Token     string
 	Session   string
-	ChanResp  chan BaseRespType
-	ChanRedis chan BaseRespType
-	ChanPSQL  chan DataImageType
-	ChanSlack chan DataImageType
-	RespDone  chan bool
-	RedisDone chan bool
-	PSQLDone  chan bool
-	SlackDone chan bool
-	RedisResp []string
+	Redis     TypeRedis
+	ChanBaseResp chan TypeChanResp
 }
 
 func NewClient() *ApprovedType {
@@ -118,18 +119,10 @@ func NewClient() *ApprovedType {
 		BaseURL:   baseUrl,
 		ApiURL:    apiURL,
 		Session:   "s%3AFLsDQ0KkRmbbHJSFijJz_5VxQPCQI7Ol.t5LQWhFeOPA9qV2S0fqa6JBsFB0Rq%2BrxMDPc1URXyHE",
-		ChanResp:  make(chan BaseRespType),
-		ChanRedis: make(chan BaseRespType),
-		ChanPSQL:  make(chan DataImageType),
-		ChanSlack: make(chan DataImageType),
 		Token:     token,
 	}
 
-	if (env.FLAG & env.FIRSTRUN) == 0 {
-		a.RedisResp = redis.Get()
-	}
-
-	a.GreateWorkers()
+	go a.workerRedis()
 
 	return a
 }

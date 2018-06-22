@@ -1,11 +1,11 @@
-package redis
+package client
 
 import (
 	"net/http"
 	"bytes"
 )
 
-func POST(data []byte) (*http.Response, error) {
+func (r *TypeRedis) POST(data []byte) (*http.Response, error) {
 
 	req, errReq := http.NewRequest("POST", "http://127.0.0.1:8008/data/redis/approved", bytes.NewReader(data))
 	if errReq != nil {
