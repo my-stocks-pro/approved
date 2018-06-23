@@ -2,8 +2,6 @@ package client
 
 import (
 	"time"
-	"strconv"
-	"fmt"
 )
 
 const (
@@ -90,32 +88,28 @@ type TypeChanResp struct {
 
 type TypeRedis struct {
 	RedisResp []string
-}
-
-type ApprovedType struct {
 	TimeStamp time.Time
 	CurrDate  string
 	CurrYear  string
 	CurrMonth string
 	CurrDay   string
+}
+
+type ApprovedType struct {
+
 	BaseURL   string
 	ApiURL    string
 	NewURL    string
 	Token     string
 	Session   string
 	Redis     TypeRedis
+	ChanRedis chan []string
 	ChanBaseResp chan TypeChanResp
 }
 
 func NewClient() *ApprovedType {
-	currDate := time.Now()
 
 	a := &ApprovedType{
-		TimeStamp: currDate,
-		CurrDate:  currDate.Format("2006-01-02"),
-		CurrYear:  strconv.Itoa(currDate.Year()),
-		CurrMonth: CheckDate(fmt.Sprintf("%d", currDate.Month())),
-		CurrDay:   CheckDate(strconv.Itoa(currDate.Day())),
 		BaseURL:   baseUrl,
 		ApiURL:    apiURL,
 		Session:   "s%3AFLsDQ0KkRmbbHJSFijJz_5VxQPCQI7Ol.t5LQWhFeOPA9qV2S0fqa6JBsFB0Rq%2BrxMDPc1URXyHE",
