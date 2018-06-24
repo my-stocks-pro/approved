@@ -114,9 +114,10 @@ func NewClient() *ApprovedType {
 		ApiURL:    apiURL,
 		Session:   "s%3AFLsDQ0KkRmbbHJSFijJz_5VxQPCQI7Ol.t5LQWhFeOPA9qV2S0fqa6JBsFB0Rq%2BrxMDPc1URXyHE",
 		Token:     token,
+		ChanRedis: make(chan []string, 1),
 	}
 
-	go a.workerRedis()
+	//go a.workerRedis()
 
 	return a
 }

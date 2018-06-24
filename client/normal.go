@@ -3,17 +3,20 @@ package client
 import (
 	"strconv"
 	"fmt"
-	"github.com/my-stocks-pro/approved/env"
 	"encoding/json"
+	"net/http"
 )
 
-func (a *ApprovedType) RunWorker () {
 
-	for dataFromRedis := range a.ChanRedis {
-		a.GetImageIDs(dataFromRedis)
-	}
-
+func (a *ApprovedType) RunWorker (w http.ResponseWriter, r *http.Request) {
+	json.NewEncoder(w).Encode(people)
 }
+
+//func (a *ApprovedType) RunWorker () {
+//
+//	dataFromRedis := <- a.ChanRedis
+//
+//}
 
 
 func (a *ApprovedType) GetImageIDs (currIDs []string) {
@@ -25,7 +28,6 @@ func (a *ApprovedType) GetImageIDs (currIDs []string) {
 		a.NewURL = fmt.Sprintf(baseUrl,
 			a.Redis.CurrYear, a.Redis.CurrMonth, "%20", a.Redis.CurrYear, a.Redis.CurrMonth, a.Redis.CurrDay, p)
 
-		env.FLAG |= env.COOKIE
 
 		res, err := a.NewRequest()
 		if err != nil {
