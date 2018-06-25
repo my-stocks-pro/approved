@@ -4,10 +4,10 @@ import (
 	"time"
 	"strconv"
 	"fmt"
+	"strings"
 )
 
-func (r *TypeRedis) GET() []string {
-
+func (r *TypeRedis) GetCurrDate() {
 	currDate := time.Now()
 
 	r.TimeStamp = currDate
@@ -16,9 +16,7 @@ func (r *TypeRedis) GET() []string {
 	r.CurrMonth = CheckDate(fmt.Sprintf("%d", currDate.Month()))
 	r.CurrDay = CheckDate(strconv.Itoa(currDate.Day()))
 
-	//TODO get data from Redis (api call to server)
-	//redis.GET(currDateStr)
-	dataFromRedis := []string{"111", "222", "333"}
-
-	return dataFromRedis
+	if strings.Compare(r.CurrDate, r.Date) == 0 {
+		r.ListIDS = []string{}
+	}
 }

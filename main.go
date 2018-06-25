@@ -1,30 +1,33 @@
 package main
 
 import (
-	"github.com/my-stocks-pro/approved/client"
-	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"fmt"
+	"github.com/my-stocks-pro/approved/client"
 )
 
 
+
+
 func main() {
-	r := gin.Default()
+	router := gin.Default()
 
-	Approved := client.NewClient()
+	Approved := client.New()
 
-	//go Approved.RunWorker()
+	router.POST("/approved/redis", func(c *gin.Context) {
 
-	Approved.ChanRedis <- Approved.Redis.GET()
-
-	r.POST("/approved", func(c *gin.Context) {
-		var data []string
-
-		if c.Bind(&data) == nil {
+		data := &client.TypeTest{}
+		if c.BindJSON(data) == nil {
 			fmt.Println(data)
-			c.JSON(200, gin.H{"status": "ok"})
+
+			Approved.Redis.ListIDS = data.IDlist
+			Approved.Redis.Date = data.Date
+			Approved.Redis.GetCurrDate()
+
+			go Approved.RunWorker()
 		}
+
 	})
 
-	r.Run(":8001")
+	router.Run(":8002")
 }
