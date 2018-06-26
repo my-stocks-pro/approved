@@ -7,7 +7,7 @@ import (
 
 func (a *ApprovedType) POST(data []byte) (*http.Response, error) {
 
-	req, errReq := http.NewRequest("POST", a.Config.ApiRedisPostURL, bytes.NewReader(data))
+	req, errReq := http.NewRequest("POST", a.POSTURL, bytes.NewReader(data))
 	if errReq != nil {
 		return nil, errReq
 	}

@@ -22,37 +22,35 @@ type ImageLinksType struct {
 }
 
 type DataImageType struct {
-	Data []struct {
-		ID         string
-		Added_date string
-		Aspect     float64
-		Assets struct {
-			Small_jpg      ImageFormatType
-			Medium_jpg     ImageFormatType
-			Huge_jpg       ImageFormatType
-			Supersize_jpg  ImageFormatType
-			Huge_tiff      ImageFormatType
-			Supersize_tiff ImageFormatType
-			Preview        ImageLinksType
-			Small_thumb    ImageLinksType
-			Large_thumb    ImageLinksType
-			Huge_thumb     ImageLinksType
-		}
-		Categories []struct {
-			ID   string
-			Name string
-		}
-		Contributor struct {
-			ID string
-		}
-		Description          string
-		Image_type           string
-		Is_adult             bool
-		Is_illustration      bool
-		Has_property_release bool
-		Keywords             []string
-		media_type           string
+	ID         string
+	Added_date string
+	Aspect     float64
+	Assets struct {
+		Small_jpg      ImageFormatType
+		Medium_jpg     ImageFormatType
+		Huge_jpg       ImageFormatType
+		Supersize_jpg  ImageFormatType
+		Huge_tiff      ImageFormatType
+		Supersize_tiff ImageFormatType
+		Preview        ImageLinksType
+		Small_thumb    ImageLinksType
+		Large_thumb    ImageLinksType
+		Huge_thumb     ImageLinksType
 	}
+	Categories []struct {
+		ID   string
+		Name string
+	}
+	Contributor struct {
+		ID string
+	}
+	Description          string
+	Image_type           string
+	Is_adult             bool
+	Is_illustration      bool
+	Has_property_release bool
+	Keywords             []string
+	media_type           string
 }
 
 type BaseRespType struct {
@@ -85,7 +83,6 @@ type TypeBase struct {
 	CurrDay     string
 	CountIDS    string
 	PerPage     int
-	CountNewIDS int
 	NewURL      string
 }
 
@@ -103,6 +100,7 @@ type ApprovedType struct {
 	ChanSlack chan *DataImageType
 	ChanPSQL  chan *DataImageType
 	Redis     TypeRedis
+	POSTURL   string
 }
 
 func New() *ApprovedType {
@@ -116,6 +114,7 @@ func New() *ApprovedType {
 		make(chan *DataImageType),
 		make(chan *DataImageType),
 		TypeRedis{},
+		"",
 	}
 
 	a.Base.PerPage = 1

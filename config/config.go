@@ -8,6 +8,7 @@ import (
 
 type TypeConfig struct {
 	ApiRedisPostURL string
+	ApiPSQLPostURL string
 	BaseURL string
 	ApiURL  string
 	Session string

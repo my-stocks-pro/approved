@@ -15,9 +15,8 @@ func (a *ApprovedType) MasterService() {
 		}
 
 		if Contains(a.Base.ListIDS, id) == false {
-			//a.ChanFull <- id
+			a.ChanFull <- id
 			a.Base.ListIDS = append(a.Base.ListIDS, id)
-			a.Base.CountNewIDS++
 		}
 
 		count++
@@ -28,6 +27,8 @@ func (a *ApprovedType) MasterService() {
 }
 
 func (a *ApprovedType) WorkerService() {
+
+	count := 0
 	for id := range a.ChanFull {
 
 		res, err := a.FullRequest(id)
@@ -35,8 +36,12 @@ func (a *ApprovedType) WorkerService() {
 			fmt.Println(err)
 		}
 
-		a.ChanSlack <- res
+		fmt.Println(res)
+
+		//a.ChanSlack <- res
 		a.ChanPSQL <- res
+
+		count++
 	}
 }
 
@@ -52,6 +57,7 @@ func (a *ApprovedType) RedisService() {
 		fmt.Println(err)
 	}
 
+	a.POSTURL = a.Config.ApiRedisPostURL
 	resp, errPOST := a.POST(b)
 	if errPOST != nil {
 		fmt.Println(errPOST)
@@ -61,9 +67,41 @@ func (a *ApprovedType) RedisService() {
 }
 
 func (a *ApprovedType) PSQLService() {
+	for dataImage := range a.ChanPSQL {
 
+		fmt.Println("SlackService", dataImage)
+
+		b, err := json.Marshal(*dataImage)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		a.POSTURL = a.Config.ApiPSQLPostURL
+		resp, errPOST := a.POST(b)
+		if errPOST != nil {
+			fmt.Println(errPOST)
+		}
+
+		fmt.Println(resp)
+	}
 }
 
 func (a *ApprovedType) SlackService() {
+	for dataImage := range a.ChanSlack {
+
+		fmt.Println("SlackService", dataImage)
+
+		b, err := json.Marshal(dataImage)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		resp, errPOST := a.POST(b)
+		if errPOST != nil {
+			fmt.Println(errPOST)
+		}
+
+		fmt.Println(resp)
+	}
 
 }

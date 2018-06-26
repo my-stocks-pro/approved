@@ -11,8 +11,6 @@ func main() {
 
 	Approved := client.New()
 
-
-
 	router.POST("/approved/redis", func(c *gin.Context) {
 
 		data := &client.TypeRedis{}
@@ -21,6 +19,7 @@ func main() {
 
 			go Approved.MasterService()
 			go Approved.WorkerService()
+			go Approved.PSQLService()
 
 			Approved.Base.ListIDS = data.ListIDS
 			Approved.Base.Date = data.Date
