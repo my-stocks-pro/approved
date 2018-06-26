@@ -7,11 +7,11 @@ import (
 )
 
 type TypeConfig struct {
+	ApiRedisPostURL string
 	BaseURL string
 	ApiURL  string
 	Session string
 	Token   string
-	NewURL  string
 }
 
 func GetConfig() *TypeConfig {

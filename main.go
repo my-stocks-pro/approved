@@ -1,30 +1,34 @@
 package main
 
 import (
+	"github.com/my-stocks-pro/approved/client"
 	"github.com/gin-gonic/gin"
 	"fmt"
-	"github.com/my-stocks-pro/approved/client"
 )
-
-
-
 
 func main() {
 	router := gin.Default()
 
 	Approved := client.New()
 
+
+
 	router.POST("/approved/redis", func(c *gin.Context) {
 
-		data := &client.TypeTest{}
+		data := &client.TypeRedis{}
 		if c.BindJSON(data) == nil {
-			fmt.Println(data)
+			fmt.Println("Post fron scheduler -> ", data)
 
-			Approved.Redis.ListIDS = data.IDlist
-			Approved.Redis.Date = data.Date
-			Approved.Redis.GetCurrDate()
+			go Approved.MasterService()
+			go Approved.WorkerService()
 
-			go Approved.RunWorker()
+			Approved.Base.ListIDS = data.ListIDS
+			Approved.Base.Date = data.Date
+
+			Approved.Base.GetCurrDate()
+			Approved.GetCountIDS()
+			Approved.GetCurrentIDS()
+
 		}
 
 	})

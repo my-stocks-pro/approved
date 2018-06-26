@@ -75,36 +75,50 @@ type BaseRespType struct {
 	}
 }
 
-//type TypeChanResp struct {
-//	Res  *BaseRespType
-//	Done bool
-//}
+type TypeBase struct {
+	ListIDS     []string
+	Date        string
+	TimeStamp   time.Time
+	CurrDate    string
+	CurrYear    string
+	CurrMonth   string
+	CurrDay     string
+	CountIDS    string
+	PerPage     int
+	CountNewIDS int
+	NewURL      string
+}
 
 type TypeRedis struct {
-	ListIDS   []string
-	Date      string
-	TimeStamp time.Time
-	CurrDate  string
-	CurrYear  string
-	CurrMonth string
-	CurrDay   string
+	Date    string
+	ListIDS []string
 }
 
 type ApprovedType struct {
-	Config   *config.TypeConfig
-	Redis    *TypeRedis
-	BaseChan chan *BaseRespType
+	Config    *config.TypeConfig
+	Base      *TypeBase
+	ChanBase  chan string
+	ChanFull  chan string
+	ChanWork  chan string
+	ChanSlack chan *DataImageType
+	ChanPSQL  chan *DataImageType
+	Redis     TypeRedis
 }
 
 func New() *ApprovedType {
 
-	 a := &ApprovedType{
+	a := &ApprovedType{
 		config.GetConfig(),
-		&TypeRedis{},
-		make(chan *BaseRespType),
+		&TypeBase{},
+		make(chan string),
+		make(chan string),
+		make(chan string),
+		make(chan *DataImageType),
+		make(chan *DataImageType),
+		TypeRedis{},
 	}
 
-	go a.BaseWorker()
+	a.Base.PerPage = 1
 
 	return a
 }
