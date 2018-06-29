@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/my-stocks-pro/approved/client"
+	"github.com/my-stocks-pro/approved-service/client"
 	"github.com/gin-gonic/gin"
 	"fmt"
 )

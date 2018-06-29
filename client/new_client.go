@@ -2,7 +2,7 @@ package client
 
 import (
 	"time"
-	"github.com/my-stocks-pro/approved/config"
+	"github.com/my-stocks-pro/approved-service/config"
 )
 
 type ImageFormatType struct {
